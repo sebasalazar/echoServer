@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,15 +24,18 @@ public class EchoHandler extends Thread {
     @Override
     public void run() {
         try {
-            InputStream is = client.getInputStream();
-            while (true) {
-                if (is.available() == 0) {
-                    break;
-                } else {
-                    byte[] buffer = new byte[128];
-                    is.read(buffer);
-                    OutputStream os = client.getOutputStream();
-                    os.write(buffer);
+            if (client != null) {
+                InputStream is = client.getInputStream();
+                while (true) {
+                    if (is.available() == 0) {
+                        break;
+                    } else {
+                        byte[] buffer = new byte[128];
+                        IOUtils.readFully(is, buffer);
+
+                        OutputStream os = client.getOutputStream();
+                        os.write(buffer);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -39,9 +43,11 @@ public class EchoHandler extends Thread {
             LOGGER.debug("Excepcion lanzada: cliente desconectado: ", e);
         } finally {
             try {
-                client.close();
+                if (client != null) {
+                    client.close();
+                }
             } catch (IOException e) {
-                LOGGER.error(e.toString());
+                LOGGER.error(e.toString(), e);
             }
         }
     }
