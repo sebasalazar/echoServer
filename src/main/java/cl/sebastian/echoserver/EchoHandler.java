@@ -1,4 +1,4 @@
-package cl.experti.echoserver;
+package cl.sebastian.echoserver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,19 +35,21 @@ public class EchoHandler extends Thread {
 
                         OutputStream os = client.getOutputStream();
                         os.write(buffer);
+                        LOGGER.info("{}", buffer);
                     }
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.toString());
-            LOGGER.debug("Excepcion lanzada: cliente desconectado: ", e);
+            LOGGER.error("Excepcion lanzada: cliente desconectado: {}", e.toString());
+            LOGGER.debug("Excepcion lanzada: cliente desconectado: {}", e.toString(), e);
         } finally {
             try {
                 if (client != null) {
                     client.close();
                 }
             } catch (IOException e) {
-                LOGGER.error(e.toString(), e);
+                LOGGER.error("Error al leer socket: {}", e.toString());
+                LOGGER.debug("Error al leer socket: {}", e.toString(), e);
             }
         }
     }

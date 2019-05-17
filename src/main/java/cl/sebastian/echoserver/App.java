@@ -1,4 +1,4 @@
-package cl.experti.echoserver;
+package cl.sebastian.echoserver;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -22,15 +22,16 @@ public class App implements Serializable {
             }
 
         } catch (Exception e) {
-            LOGGER.error(e.toString());
-            LOGGER.debug("Excepcion Capturada", e);
+            LOGGER.error("Error en la ejecución: {}", e.toString());
+            LOGGER.debug("Error en la ejecución: {}", e.toString(), e);
         } finally {
             try {
                 if (server != null) {
                     server.close();
                 }
             } catch (IOException e) {
-                LOGGER.error(e.toString(), e);
+                LOGGER.error("Error en el servidor: {}", e.toString());
+                LOGGER.debug("Error en el servidor: {}", e.toString(), e);
             }
         }
     }

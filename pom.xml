@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cl.experti</groupId>
+    <groupId>cl.sebastian</groupId>
     <artifactId>echoServer</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
@@ -11,19 +11,29 @@
     <url>http://maven.apache.org</url>
 
     <properties>
+        <jvm.version>1.8</jvm.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <log4j.version>1.2.17</log4j.version>
-        <slf4j.version>1.7.24</slf4j.version>
-        <commons.io.version>2.5</commons.io.version>
-        <commons.lang3.version>3.5</commons.lang3.version>
+        <log4j2.version>2.11.2</log4j2.version>
+        <slf4j.version>1.7.26</slf4j.version>
+        <commons.io.version>2.6</commons.io.version>
+        <commons.lang3.version>3.9</commons.lang3.version>
+        
+        <!-- Versiones Maven -->
+        <maven.compiler.version>3.8.0</maven.compiler.version>
+        <maven.surefire.version>2.20</maven.surefire.version>
+        <maven.javadoc.version>2.10.4</maven.javadoc.version>
+        <maven.jar.version>3.1.1</maven.jar.version>
+        <maven.resources.version>3.1.0</maven.resources.version>
+        <maven.shade.version>3.1.0</maven.shade.version>
+        <exec.version>1.6.0</exec.version>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <version>3.1</version>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
                 <configuration>
                     <source>${jvm.version}</source>
                     <target>${jvm.version}</target>
@@ -32,9 +42,9 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>${exec.version}</version>
                 <configuration>
-                    <mainClass>cl.experti.echoserver.App</mainClass>
+                    <mainClass>cl.sebastian.echoserver.App</mainClass>
                 </configuration>
             </plugin>
             
@@ -42,12 +52,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>${maven.jar.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>cl.experti.echoserver.App</mainClass>
-                            <packageName>cl.experti.echoserver</packageName>
+                            <mainClass>cl.sebastian.echoserver.App</mainClass>
+                            <packageName>cl.sebastian.echoserver</packageName>
                         </manifest>
                         <manifestEntries>
                             <mode>development</mode>
@@ -59,7 +69,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.2</version> <!-- Versión 2.0 con Maven3 -->
+                <version>${maven.shade.version}</version> <!-- Versión 2.0 con Maven3 -->
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -70,7 +80,7 @@
                             <transformers>
                                 <!-- Spring -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>cl.experti.echoserver.App</mainClass>
+                                    <mainClass>cl.sebastian.echoserver.App</mainClass>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/spring.handlers</resource>
@@ -97,30 +107,35 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-    
         <!-- dependencias de log4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
-            <scope>compile</scope>
         </dependency>
+
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j2.version}</version>
         </dependency>
         
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
         </dependency>
         
         <dependency>
