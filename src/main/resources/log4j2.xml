@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="path.logs">${sys:user.home}${sys:file.separator}logs</Property>
+    </Properties>
+    
+    <Appenders>
+        <!-- Archivo principal -->
+        <RollingFile name="ROOT_REST_ECHOSRV" 
+                     fileName="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}echoServer.log" 
+                     filePattern="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}echoServer.log.%d{yyyyMMdd}.gz" 
+                     append="true">
+            <ThresholdFilter level="DEBUG" />
+            <PatternLayout pattern="%d{dd/MM/yyyy}; %d{HH:mm:ss}; %p; (%t) %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="31"/>
+        </RollingFile>
+
+        <!-- DEBUG -->
+        <RollingFile name="DEBUG_REST_ECHOSRV" 
+                     fileName="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}debug.log" 
+                     filePattern="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}debug.log.%d{yyyyMMdd}.gz" 
+                     append="true">
+            <ThresholdFilter level="DEBUG" />
+            <PatternLayout pattern="%d{dd/MM/yyyy}; %d{HH:mm:ss}; %p; {%C->%M} %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="31"/>
+        </RollingFile>
+        
+        <!-- ERROR -->
+        <RollingFile name="ERROR_REST_ECHOSRV" 
+                     fileName="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}error.log" 
+                     filePattern="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}error.log.%d{yyyyMMdd}.gz" 
+                     append="true">
+            <ThresholdFilter level="ERROR" />
+            <PatternLayout pattern="[%d{dd/MM/yyyy HH:mm:ss,SSS}] {%C->%M} %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="31"/>
+        </RollingFile>
+
+        <!-- INFO -->
+        <RollingFile name="INFO_REST_ECHOSRV" 
+                     fileName="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}info.log" 
+                     filePattern="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}info.log.%d{yyyyMMdd}.gz" 
+                     append="true">
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%d{dd/MM/yyyy}; %d{HH:mm:ss}; %p; %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="31"/>
+        </RollingFile>
+        
+        <!-- CXF -->
+        <RollingFile name="CXF_REST_ECHOSRV" 
+                     fileName="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}cxf.log" 
+                     filePattern="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}cxf.log.%d{yyyyMMdd}.gz" 
+                     append="true">
+            <PatternLayout pattern="%d{dd/MM/yyyy}; %d{HH:mm:ss}; %p; %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="31"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.echoServer" additivity="false">
+            <AppenderRef ref="INFO_REST_ECHOSRV" level="info" />
+            <AppenderRef ref="ERROR_REST_ECHOSRV" level="error" />
+            <AppenderRef ref="DEBUG_REST_ECHOSRV" level="debug" />
+        </Logger>
+
+        <Logger name="org.apache.cxf" level="INFO" additivity="false">
+            <AppenderRef ref="CXF_REST_ECHOSRV" />
+        </Logger>
+
+        <Root level="INFO">
+            <AppenderRef ref="ROOT_REST_ECHOSRV"/>
+        </Root>
+    </Loggers>
+</Configuration>
