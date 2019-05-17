@@ -10,7 +10,7 @@
                      fileName="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}echoServer.log" 
                      filePattern="${sys:path.logs}${sys:file.separator}echoServer${sys:file.separator}echoServer.log.%d{yyyyMMdd}.gz" 
                      append="true">
-            <ThresholdFilter level="DEBUG" />
+            <ThresholdFilter level="TRACE" />
             <PatternLayout pattern="%d{dd/MM/yyyy}; %d{HH:mm:ss}; %p; (%t) %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true" />
@@ -71,17 +71,13 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="com.echoServer" additivity="false">
+        <Logger name="cl.sebastian.echoserver">
             <AppenderRef ref="INFO_REST_ECHOSRV" level="info" />
             <AppenderRef ref="ERROR_REST_ECHOSRV" level="error" />
             <AppenderRef ref="DEBUG_REST_ECHOSRV" level="debug" />
         </Logger>
 
-        <Logger name="org.apache.cxf" level="INFO" additivity="false">
-            <AppenderRef ref="CXF_REST_ECHOSRV" />
-        </Logger>
-
-        <Root level="INFO">
+        <Root level="TRACE">
             <AppenderRef ref="ROOT_REST_ECHOSRV"/>
         </Root>
     </Loggers>

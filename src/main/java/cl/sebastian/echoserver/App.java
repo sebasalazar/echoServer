@@ -2,6 +2,7 @@ package cl.sebastian.echoserver;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import org.slf4j.Logger;
@@ -11,28 +12,29 @@ public class App implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 
-    public static void main(String[] args) {
-        ServerSocket server = null;
-        try {
-            server = new ServerSocket(7777);
-            while (true) {
-                Socket client = server.accept();
-                EchoHandler handler = new EchoHandler(client);
-                handler.start();
-            }
+    public static void main(String[] args) throws IOException {
+        int port = 7777;
+        ServerSocket serverSocket = new ServerSocket(port, 50, InetAddress.getByAddress(new byte[]{0x00, 0x00, 0x00, 0x00}));
+        LOGGER.info("Servidor iniciado en puerto {} ", port);
 
-        } catch (Exception e) {
-            LOGGER.error("Error en la ejecución: {}", e.toString());
-            LOGGER.debug("Error en la ejecución: {}", e.toString(), e);
-        } finally {
-            try {
-                if (server != null) {
-                    server.close();
+        while (true) {
+            try (Socket clientSocket = serverSocket.accept()) {
+                LOGGER.info("Se ha aceptado la conexión desde la ip: {}", clientSocket.getRemoteSocketAddress());
+
+                In in = new In(clientSocket);
+                Out out = new Out(clientSocket);
+
+                String s;
+                while ((s = in.readLine()) != null) {
+                    LOGGER.info("{}", s);
+                    out.println(s);
                 }
-            } catch (IOException e) {
-                LOGGER.error("Error en el servidor: {}", e.toString());
-                LOGGER.debug("Error en el servidor: {}", e.toString(), e);
+
+                LOGGER.info("Se cierra la conexión desde la ip: {}", clientSocket.getRemoteSocketAddress());
+                out.close();
+                in.close();
             }
         }
     }
+
 }
